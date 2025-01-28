@@ -2,27 +2,36 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
+import  './ProductList';
 
-const CartItem = ({ onContinueShopping }) => {
+
+const CartItem = (props) => {
   const cart = useSelector(state => state.cart.items); // Récupère les items du panier dans le state
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
-    return cart.reduce((total, item) => {
-            const cost = parseFloat(item.cost.toString().substring(1)) || 0;
-            const quantity = parseInt(item.quantity, 10) || 0;
-        total + item.cost * item.quantity, 0});
+    let total =0
+    cart.map((item)=>{
+              const cost = parseFloat(item.cost.toString().substring(1)) || 0;
+              const quantity = parseInt(item.quantity, 10) || 0;
+        total += cost*quantity;
+
+    })
+    return total;
+    // return cart.map((total, item) => {
+    //         const cost = parseFloat(item.cost.toString().substring(1)) || 0;
+    //         const quantity = parseInt(item.quantity, 10) || 0;
+    //     total + cost * quantity, 0});
   };
 
   // Handle continue shopping button click
-  const handleContinueShopping = (e) => {
-    e.preventDefault();
-    if (onContinueShopping) {
-      onContinueShopping(); // Appelle la méthode passée en prop
+  const handleContinueShopping= (e) => {
+ 
+    if (props.navigateToPlantList) {
+        props.navigateToPlantList();
     }
   };
-
   // Handle incrementing item quantity
   const handleIncrement = (item) => {
     dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 })); // Met à jour la quantité
@@ -46,9 +55,12 @@ const CartItem = ({ onContinueShopping }) => {
   const calculateTotalCost = (item) => {
     const cost = parseFloat(item.cost.toString().substring(1)) || 0;
     const quantity = parseInt(item.quantity, 10) || 0;
-    return (cost * quantity).toFixed(2);
+    return (cost * quantity);
   };
 
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
+  };
   return (
     <div className="cart-container">
       <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
@@ -87,9 +99,9 @@ const CartItem = ({ onContinueShopping }) => {
       </div>
       <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
       <div className="continue_shopping_btn">
-        <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
+        <button className="get-started-button" onClick={handleContinueShopping}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={(e)=>handleCheckoutShopping(e)}>Checkout</button>
       </div>
     </div>
   );
