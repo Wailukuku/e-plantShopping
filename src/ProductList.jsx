@@ -10,7 +10,7 @@ function ProductList() {
         // Logic to navigate to the plant list page
         console.log("Navigating to plant list");
         console.log(window.location.href);
-       window.location.href="/";
+       window.location.href="./";
     };
 
    
